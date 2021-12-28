@@ -4,7 +4,7 @@
  * @email: 969718197@qq.com
  * @github: https://github.com/z-xuanyu
  * @Date: 2021-12-27 12:07:52
- * @LastEditTime: 2021-12-27 15:15:51
+ * @LastEditTime: 2021-12-28 10:00:47
  * @Description: 会员控制器
  */
 import {
@@ -16,6 +16,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,13 +28,14 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { ParseIdPipe } from '@app/common/pipe/parse.id.pipe';
+import { ParseIdPipe } from '@app/common/pipe/parse-id.pipe';
 import { User } from '@app/db/modules/user.model';
 import {
   apiSucceed,
   ApiSucceedResult,
   PaginationResult,
-} from '@app/common/result.model';
+} from '@app/common/ResponseResultModel';
+import { QueryUserDto } from './dto/query-user.dto';
 
 @ApiTags('管理站--会员')
 @UseGuards(AuthGuard('admin-jwt'))
@@ -53,8 +55,10 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: '会员列表' })
-  async findAll(): Promise<ApiSucceedResult<PaginationResult<Array<User>>>> {
-    const res = await this.userService.findAll();
+  async findAll(
+    @Query() parameters: QueryUserDto,
+  ): Promise<ApiSucceedResult<PaginationResult<Array<User>>>> {
+    const res = await this.userService.findAll(parameters);
     return apiSucceed(res);
   }
 
