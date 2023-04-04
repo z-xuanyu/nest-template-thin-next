@@ -48,15 +48,13 @@ export class UserService {
   async findAll(
     parameters: QueryUserDto,
   ): Promise<PaginationResult<Array<User>>> {
-    let total = 0;
+    const query = { name: { $regex: new RegExp(parameters.name, 'i') } };
+    const total = await this.userModel.countDocuments(query);
     const result = await this.userModel
-      .find({ name: { $regex: new RegExp(parameters.name, 'i') } })
+      .find(query)
       .limit(~~parameters.pageSize)
       .skip(~~((parameters.pageNumber - 1) * parameters.pageSize))
-      .then((doc) => {
-        total = doc.length;
-        return doc;
-      });
+      .exec();
     return {
       total,
       items: result,

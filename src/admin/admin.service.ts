@@ -55,24 +55,18 @@ export class AdminService {
   async findAll(
     parameters: QueryAdminDto,
   ): Promise<PaginationResult<Array<Admin>>> {
-    let total = 0;
+    const query = {
+      $and: [
+        { name: { $regex: new RegExp(parameters.name, 'i') } },
+        { status: parameters.status ?? { $ne: parameters.status } },
+      ],
+    };
+    const total = await this.adminModel.countDocuments(query);
     const result = await this.adminModel
-      .find({
-        $or: [
-          {
-            name: { $regex: new RegExp(parameters.name, 'i') },
-            status: parameters.status
-              ? parameters.status
-              : { $ne: parameters.status },
-          },
-        ],
-      })
+      .find(query)
       .limit(~~parameters.pageSize)
       .skip(~~((parameters.pageNumber - 1) * parameters.pageSize))
-      .then((doc) => {
-        total = doc.length;
-        return doc;
-      });
+      .exec();
     return {
       total,
       items: result,

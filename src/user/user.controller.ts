@@ -37,7 +37,7 @@ import {
 } from '@app/common/ResponseResultModel';
 import { QueryUserDto } from './dto/query-user.dto';
 
-@ApiTags('管理站--会员')
+@ApiTags('管理端--会员')
 @UseGuards(AuthGuard('admin-jwt'))
 @ApiBearerAuth()
 @Controller('user')
