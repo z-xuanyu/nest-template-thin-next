@@ -9,9 +9,8 @@
  */
 import { ApiFail, PaginationResult } from '@app/common/ResponseResultModel';
 import { Admin } from '@app/db/modules/admin.model';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
-import { InjectModel } from 'nestjs-typegoose';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { QueryAdminDto } from './dto/query-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
@@ -20,7 +19,7 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 export class AdminService {
   // 注入模型
   constructor(
-    @InjectModel(Admin) private adminModel: ReturnModelType<typeof Admin>,
+    @Inject(Admin.name) private adminModel: ReturnModelType<typeof Admin>,
   ) {}
 
   /**

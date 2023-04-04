@@ -9,9 +9,8 @@
  */
 import { ApiFail, PaginationResult } from '@app/common/ResponseResultModel';
 import { User } from '@app/db/modules/user.model';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
-import { InjectModel } from 'nestjs-typegoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -19,7 +18,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User) private userModel: ReturnModelType<typeof User>,
+    @Inject(User.name) private userModel: ReturnModelType<typeof User>,
   ) {}
 
   /**

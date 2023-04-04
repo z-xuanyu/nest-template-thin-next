@@ -5,29 +5,49 @@
  * @github: https://github.com/z-xuanyu
  * @Date: 2021-12-24 15:53:53
  * @LastEditTime: 2021-12-27 16:17:37
- * @Description: Modify here please
+ * @Description: 数据库模块
  */
-import { Global, Module } from '@nestjs/common';
-import { TypegooseConnectionOptions, TypegooseModule } from 'nestjs-typegoose';
-import { DbService } from './db.service';
-import { Admin } from './modules/admin.model';
-import { Category } from './modules/category.model';
-import { User } from './modules/user.model';
+import { DynamicModule, Module, Provider } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { getModelForClass, mongoose } from '@typegoose/typegoose';
 
-// 导入所有的Schema模块
-const models = TypegooseModule.forFeature([Admin, User, Category]);
+type ClassType = { new (...args: any[]): any };
 
-@Global()
-@Module({
-  imports: [
-    TypegooseModule.forRoot('mongodb://localhost/nest-jp', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    } as TypegooseConnectionOptions),
+@Module({})
+export class DbModule {
+  // 数据库链接
+  static forRoot(envKey: string, options = {}): DynamicModule {
+    const providers: Provider[] = [
+      {
+        provide: 'DB_CONNECTION',
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => {
+          const uri = configService.get(envKey);
+          return mongoose.connect(uri, options);
+        },
+      },
+    ];
+    return {
+      module: DbModule,
+      providers,
+      exports: providers,
+      global: true,
+    };
+  }
 
-    models,
-  ],
-  providers: [DbService],
-  exports: [DbService, models],
-})
-export class DbModule {}
+  static forFeature(models: ClassType[]): DynamicModule {
+    const providers = models.map((model) => {
+      return {
+        provide: model.name,
+        useFactory: () => getModelForClass(model),
+      } as Provider;
+    });
+
+    return {
+      module: DbModule,
+      providers,
+      exports: providers,
+      global: true,
+    };
+  }
+}

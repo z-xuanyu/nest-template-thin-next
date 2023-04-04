@@ -9,13 +9,13 @@
  */
 import { Strategy, StrategyOptions, ExtractJwt } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { InjectModel } from 'nestjs-typegoose';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { User } from '@app/db/modules/user.model';
+import { Inject } from '@nestjs/common';
 
 export class WebJwtStrategy extends PassportStrategy(Strategy, 'web-jwt') {
   constructor(
-    @InjectModel(User) private userModel: ReturnModelType<typeof User>,
+    @Inject(User.name) private userModel: ReturnModelType<typeof User>,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

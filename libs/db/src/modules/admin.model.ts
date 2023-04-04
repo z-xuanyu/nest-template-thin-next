@@ -5,7 +5,7 @@
  * @github: https://github.com/z-xuanyu
  * @Date: 2021-12-24 15:55:35
  * @LastEditTime: 2021-12-24 17:23:23
- * @Description: Modify here please
+ * @Description: 管理员模型
  */
 import { ApiProperty } from '@nestjs/swagger';
 import { prop, ModelOptions, DocumentType } from '@typegoose/typegoose';

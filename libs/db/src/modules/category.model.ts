@@ -31,5 +31,5 @@ export class Category {
 
   @ApiProperty({ title: '上级分类', default: null })
   @prop({ ref: () => Category, default: null })
-  parentId: Ref<Category> | null;
+  pid: Ref<Category> | null;
 }

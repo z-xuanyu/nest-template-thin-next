@@ -37,7 +37,7 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 import { QueryAdminDto } from './dto/query-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 
-@ApiTags('管理站--管理员')
+@ApiTags('管理端--管理员')
 @Controller('admin')
 @UseGuards(AuthGuard('admin-jwt'))
 @ApiBearerAuth()

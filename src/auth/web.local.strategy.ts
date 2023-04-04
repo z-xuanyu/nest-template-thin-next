@@ -9,15 +9,15 @@
  */
 import { Strategy, IStrategyOptions } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
-import { InjectModel } from 'nestjs-typegoose';
 import { ReturnModelType } from '@typegoose/typegoose';
-import { BadRequestException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { compareSync } from 'bcryptjs';
 import { User } from '@app/db/modules/user.model';
+import { ApiFail } from '@app/common/ResponseResultModel';
 
 export class WebLocalStrategy extends PassportStrategy(Strategy, 'web-local') {
   constructor(
-    @InjectModel(User) private userModel: ReturnModelType<typeof User>,
+    @Inject(User.name) private userModel: ReturnModelType<typeof User>,
   ) {
     super({
       usernameField: 'email',
@@ -29,13 +29,13 @@ export class WebLocalStrategy extends PassportStrategy(Strategy, 'web-local') {
   async validate(email: string, password: string): Promise<User> {
     const user = await this.userModel.findOne({ email }).select('+password');
     if (!user) {
-      throw new BadRequestException('用户名不正确');
+      throw new ApiFail(1001, '账号不存在');
     }
     if (!compareSync(password, user.password)) {
-      throw new BadRequestException('密码不正确');
+      throw new ApiFail(1002, '密码不正确');
     }
     if (!user.status) {
-      throw new BadRequestException('用户已被禁用');
+      throw new ApiFail(1003, '用户已被禁用');
     }
     return user;
   }

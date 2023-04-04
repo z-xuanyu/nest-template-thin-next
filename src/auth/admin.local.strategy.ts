@@ -9,18 +9,18 @@
  */
 import { Strategy, IStrategyOptions } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
-import { InjectModel } from 'nestjs-typegoose';
 import { ReturnModelType } from '@typegoose/typegoose';
-import { BadRequestException } from '@nestjs/common';
 import { compareSync } from 'bcryptjs';
 import { Admin } from '@app/db/modules/admin.model';
+import { ApiFail } from '@app/common/ResponseResultModel';
+import { Inject } from '@nestjs/common';
 
 export class AdminLocalStrategy extends PassportStrategy(
   Strategy,
   'admin-local',
 ) {
   constructor(
-    @InjectModel(Admin) private adminModel: ReturnModelType<typeof Admin>,
+    @Inject(Admin.name) private adminModel: ReturnModelType<typeof Admin>,
   ) {
     super({
       usernameField: 'email',
@@ -35,13 +35,13 @@ export class AdminLocalStrategy extends PassportStrategy(
       .findOne({ email })
       .select('+password');
     if (!adminInfo) {
-      throw new BadRequestException('用户名不正确');
+      throw new ApiFail(1001, '账号不存在!');
     }
     if (!compareSync(password, adminInfo.password)) {
-      throw new BadRequestException('密码不正确');
+      throw new ApiFail(1002, '密码不正确');
     }
     if (!adminInfo.status) {
-      throw new BadRequestException('用户已被禁用');
+      throw new ApiFail(1003, '用户已被禁用');
     }
     return adminInfo;
   }

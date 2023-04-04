@@ -13,7 +13,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 // 成功返回
 export class ApiSucceedResult<T> {
   code: number;
-  result?: T;
+  data?: T;
   message: string;
 }
 
@@ -26,7 +26,7 @@ export class PaginationResult<T> {
 export function apiSucceed<T>(data?: T): ApiSucceedResult<T> {
   return {
     code: 0,
-    result: data,
+    data,
     message: '成功',
   };
 }

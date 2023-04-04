@@ -9,9 +9,8 @@
  */
 import { PaginationResult } from '@app/common/ResponseResultModel';
 import { Category } from '@app/db/modules/category.model';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ReturnModelType } from '@typegoose/typegoose';
-import { InjectModel } from 'nestjs-typegoose';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { QueryCategoryDto } from './dto/query-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -20,7 +19,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoryService {
   // 注入
   constructor(
-    @InjectModel(Category)
+    @Inject(Category.name)
     private categoryModel: ReturnModelType<typeof Category>,
   ) {}
 
