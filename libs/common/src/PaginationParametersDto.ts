@@ -8,11 +8,24 @@
  * @Description: Modify here please
  */
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 
 export class PaginationParametersDto {
-  @ApiProperty({ title: '页码', default: 1, required: false })
-  pageNumber: number;
+  @ApiProperty({
+    description: '页码',
+    type: Number,
+    default: 1,
+    required: false,
+  })
+  @IsOptional()
+  pageNumber?: number;
 
-  @ApiProperty({ title: '页数', default: 10, required: false })
-  pageSize: number;
+  @ApiProperty({
+    description: '页数',
+    type: Number,
+    default: 10,
+    required: false,
+  })
+  @IsOptional()
+  pageSize?: number;
 }

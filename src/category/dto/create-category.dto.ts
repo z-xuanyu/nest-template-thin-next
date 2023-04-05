@@ -16,6 +16,6 @@ export class CreateCategoryDto {
   @ApiProperty({ title: '排序' })
   sort: number;
 
-  @ApiProperty({ title: '上级分类' })
-  parentId?: string | null;
+  @ApiProperty({ title: '上级分类', default: null })
+  pid?: string | null;
 }

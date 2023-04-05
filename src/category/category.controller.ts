@@ -36,7 +36,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { QueryCategoryDto } from './dto/query-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
-@ApiTags('管理站--分类管理')
+@ApiTags('管理端--分类管理')
 @UseGuards(AuthGuard('admin-jwt'))
 @ApiBearerAuth()
 @Controller('category')

@@ -27,6 +27,10 @@ export class Admin {
   @prop({ required: true, unique: true })
   email: string;
 
+  @ApiProperty({ title: '头像' })
+  @prop()
+  avatar: string;
+
   @ApiProperty({ title: '密码' })
   @prop({
     required: true,

@@ -43,18 +43,34 @@ export class CategoryService {
   async findAll(
     parameters: QueryCategoryDto,
   ): Promise<PaginationResult<Array<Category>>> {
-    let total = 0;
-    const result = await this.categoryModel
-      .find({ name: { $regex: new RegExp(parameters.name, 'i') } })
-      .limit(~~parameters.pageSize)
-      .skip(~~((parameters.pageNumber - 1) * parameters.pageSize))
-      .then((doc) => {
-        total = doc.length;
-        return doc;
-      });
+    const query = { name: { $regex: new RegExp(parameters.name, 'i') } };
+    const total = await this.categoryModel.countDocuments();
+    const list = await this.categoryModel.aggregate([
+      {
+        $match: query,
+      },
+      {
+        $lookup: {
+          from: 'articles',
+          localField: '_id',
+          foreignField: 'categoryId',
+          as: 'articles',
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          sort: 1,
+          status: 1,
+          articleCount: { $size: '$articles' },
+        },
+      },
+      { $skip: ~~((parameters.pageNumber - 1) * parameters.pageSize) },
+      { $limit: ~~parameters.pageSize },
+    ]);
     return {
       total,
-      items: result,
+      items: list,
     };
   }
 
