@@ -10,17 +10,23 @@
 import { HttpExceptionFilter } from '@app/common/filters/http-exception.filter';
 import { ValidationDtoPipe } from '@app/common/pipe/validate-dto.pipe';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // dto参数校验管道
   app.useGlobalPipes(new ValidationDtoPipe());
   // 允许跨域
   app.enableCors();
   // 全局注册错误的过滤器(错误异常)
   app.useGlobalFilters(new HttpExceptionFilter());
+  // 上传资源
+  app.useStaticAssets(join(__dirname, '..', 'public'), {
+    prefix: '/public',
+  });
   const config = new DocumentBuilder()
     .setTitle('Api文档')
     .setDescription('The cats API description')

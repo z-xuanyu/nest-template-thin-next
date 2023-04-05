@@ -7,10 +7,18 @@
  * @LastEditTime: 2021-12-28 11:04:05
  * @Description: 登录控制器
  */
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminLoginDto } from './dto/adminl.login.dto';
 import { WebLoginDto } from './dto/web.login.dto';
 import { apiSucceed, ApiSucceedResult } from '@app/common/ResponseResultModel';
@@ -18,6 +26,10 @@ import { LoginResultDto } from './dto/login.result.dto';
 import { User } from '@app/db/modules/user.model';
 import { WebRegisterDto } from './dto/web.register.dto';
 import { UserService } from 'src/user/user.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FileUploadDto } from './dto/file-upload.dto';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @ApiTags('登录')
 @Controller('auth')
@@ -76,5 +88,59 @@ export class AuthController {
   ): Promise<ApiSucceedResult<User>> {
     const user = await this.userService.create(registerDto);
     return apiSucceed(user);
+  }
+
+  @Post('uploadImage')
+  @ApiOperation({ summary: '图片上传' })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './public/uploads/images',
+        filename: (req, file, cb) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 10).toString(10))
+            .join('');
+          return cb(null, `${randomName}${extname(file.originalname)}`);
+        },
+      }),
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: '图片上传',
+    type: FileUploadDto,
+  })
+  uploadImage(@UploadedFile() file, @Req() req) {
+    const domain = `${req.protocol}://${req.headers.host}`;
+    const url = `${domain}/${file.path.replaceAll('\\', '/')}`;
+    return apiSucceed(url);
+  }
+
+  @Post('uploadVideo')
+  @ApiOperation({ summary: '视频上传' })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './public/uploads/videos',
+        filename: (req, file, cb) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 10).toString(10))
+            .join('');
+          return cb(null, `${randomName}${extname(file.originalname)}`);
+        },
+      }),
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: '视频上传',
+    type: FileUploadDto,
+  })
+  uploadVideo(@UploadedFile() file, @Req() req) {
+    const domain = `${req.protocol}://${req.headers.host}`;
+    const url = `${domain}/${file.path.replaceAll('\\', '/')}`;
+    return apiSucceed(url);
   }
 }
