@@ -10,6 +10,7 @@
 import {
   Body,
   Controller,
+  Param,
   Post,
   Req,
   UploadedFile,
@@ -18,7 +19,13 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
-import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AdminLoginDto } from './dto/adminl.login.dto';
 import { WebLoginDto } from './dto/web.login.dto';
 import { apiSucceed, ApiSucceedResult } from '@app/common/ResponseResultModel';
@@ -30,6 +37,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadDto } from './dto/file-upload.dto';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { MaterialService } from 'src/material/material.service';
+import { CreateMaterialDto } from 'src/material/dto/create-material.dto';
 
 @ApiTags('登录')
 @Controller('auth')
@@ -38,6 +47,7 @@ export class AuthController {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
+    private materialService: MaterialService,
   ) {}
 
   @ApiOperation({ summary: '管理站--登录' })
@@ -90,7 +100,7 @@ export class AuthController {
     return apiSucceed(user);
   }
 
-  @Post('uploadImage')
+  @Post('uploadImage/:id')
   @ApiOperation({ summary: '图片上传' })
   @UseInterceptors(
     FileInterceptor('file', {
@@ -107,17 +117,28 @@ export class AuthController {
     }),
   )
   @ApiConsumes('multipart/form-data')
+  @ApiParam({ name: 'id', description: '文件分类id', required: false })
   @ApiBody({
     description: '图片上传',
     type: FileUploadDto,
   })
-  uploadImage(@UploadedFile() file, @Req() req) {
+  async uploadImage(@UploadedFile() file, @Req() req, @Param('id') id: string) {
     const domain = `${req.protocol}://${req.headers.host}`;
     const url = `${domain}/${file.path.replaceAll('\\', '/')}`;
-    return apiSucceed(url);
+    const data: CreateMaterialDto = {
+      name: file.originalname,
+      path: file.path.replaceAll('\\', '/'),
+      url,
+      type: 'image',
+    };
+    if (id) {
+      data.cid = id;
+    }
+    await this.materialService.create(data);
+    return apiSucceed(data);
   }
 
-  @Post('uploadVideo')
+  @Post('uploadVideo/:id')
   @ApiOperation({ summary: '视频上传' })
   @UseInterceptors(
     FileInterceptor('file', {
@@ -134,13 +155,24 @@ export class AuthController {
     }),
   )
   @ApiConsumes('multipart/form-data')
+  @ApiParam({ name: 'id', description: '文件分类id', required: false })
   @ApiBody({
     description: '视频上传',
     type: FileUploadDto,
   })
-  uploadVideo(@UploadedFile() file, @Req() req) {
+  async uploadVideo(@UploadedFile() file, @Req() req, @Param('id') id: string) {
     const domain = `${req.protocol}://${req.headers.host}`;
     const url = `${domain}/${file.path.replaceAll('\\', '/')}`;
-    return apiSucceed(url);
+    const data: CreateMaterialDto = {
+      name: file.originalname,
+      path: file.path.replaceAll('\\', '/'),
+      url,
+      type: 'image',
+    };
+    if (id) {
+      data.cid = id;
+    }
+    await this.materialService.create(data);
+    return apiSucceed(data);
   }
 }

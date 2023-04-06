@@ -16,9 +16,11 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { CategoryModule } from './category/category.module';
 import { ArticleModule } from './article/article.module';
+import { MaterialCategoryModule } from './material-category/material-category.module';
+import { MaterialModule } from './material/material.module';
 
 @Module({
-  imports: [CommonModule, AuthModule, AdminModule, UserModule, CategoryModule, ArticleModule],
+  imports: [CommonModule, AuthModule, AdminModule, UserModule, CategoryModule, ArticleModule, MaterialCategoryModule, MaterialModule],
   controllers: [AppController],
   providers: [AppService],
 })
