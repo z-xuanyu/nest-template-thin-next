@@ -39,6 +39,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { MaterialService } from 'src/material/material.service';
 import { CreateMaterialDto } from 'src/material/dto/create-material.dto';
+import { isValidObjectId } from 'mongoose';
 
 @ApiTags('登录')
 @Controller('auth')
@@ -123,6 +124,7 @@ export class AuthController {
     type: FileUploadDto,
   })
   async uploadImage(@UploadedFile() file, @Req() req, @Param('id') id: string) {
+    console.log(id, '参数')
     const domain = `${req.protocol}://${req.headers.host}`;
     const url = `${domain}/${file.path.replaceAll('\\', '/')}`;
     const data: CreateMaterialDto = {
@@ -131,7 +133,7 @@ export class AuthController {
       url,
       type: 'image',
     };
-    if (id) {
+    if (isValidObjectId(id)) {
       data.cid = id;
     }
     await this.materialService.create(data);
@@ -169,7 +171,7 @@ export class AuthController {
       url,
       type: 'image',
     };
-    if (id) {
+    if (isValidObjectId(id)) {
       data.cid = id;
     }
     await this.materialService.create(data);

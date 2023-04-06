@@ -23,8 +23,8 @@ import { QueryArticleDto } from './dto/query-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 
 @ApiTags('管理端--文章管理')
-// @UseGuards(AuthGuard('admin-jwt'))
-// @ApiBearerAuth()
+@UseGuards(AuthGuard('admin-jwt'))
+@ApiBearerAuth()
 @Controller('article')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}

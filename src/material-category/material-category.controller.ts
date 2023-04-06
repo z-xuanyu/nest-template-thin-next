@@ -6,14 +6,18 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { MaterialCategoryService } from './material-category.service';
 import { CreateMaterialCategoryDto } from './dto/create-material-category.dto';
 import { UpdateMaterialCategoryDto } from './dto/update-material-category.dto';
-import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { apiSucceed } from '@app/common/ResponseResultModel';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('管理端--素材分类')
+@UseGuards(AuthGuard('admin-jwt'))
+@ApiBearerAuth()
 @Controller('material-category')
 export class MaterialCategoryController {
   constructor(

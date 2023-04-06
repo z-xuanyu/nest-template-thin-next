@@ -1,29 +1,25 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { MaterialService } from './material.service';
 import { CreateMaterialDto } from './dto/create-material.dto';
 import { UpdateMaterialDto } from './dto/update-material.dto';
-import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { apiSucceed } from '@app/common/ResponseResultModel';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('管理端--素材中心')
+@UseGuards(AuthGuard('admin-jwt'))
+@ApiBearerAuth()
 @Controller('material')
 export class MaterialController {
   constructor(private readonly materialService: MaterialService) {}
-
-  @Post()
-  @ApiOperation({ summary: '添加素材上传记录' })
-  async create(@Body() createMaterialDto: CreateMaterialDto) {
-    const res = await this.materialService.create(createMaterialDto);
-    return apiSucceed(res);
-  }
 
   @Get()
   @ApiOperation({ summary: '素材列表' })
