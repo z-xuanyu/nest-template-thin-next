@@ -4,6 +4,7 @@ import { ReturnModelType } from '@typegoose/typegoose';
 import { CreateMaterialDto } from './dto/create-material.dto';
 import { UpdateMaterialDto } from './dto/update-material.dto';
 import { unlink } from 'fs/promises';
+import { QueryMaterialDto } from './dto/query-material.dto';
 
 @Injectable()
 export class MaterialService {
@@ -15,8 +16,22 @@ export class MaterialService {
     return await this.materialModel.create(createMaterialDto);
   }
 
-  async findAll() {
-    return await this.materialModel.find();
+  async findAll(parameters: QueryMaterialDto) {
+    if (!parameters.type) parameters.type = 'image';
+    const query = {
+      name: { $regex: new RegExp(parameters.name, 'i') },
+      type: parameters.type,
+    };
+    const total = await this.materialModel.countDocuments(query);
+    const list = await this.materialModel
+      .find(query)
+      .limit(~~parameters.pageSize)
+      .skip(~~((parameters.pageNumber - 1) * parameters.pageSize))
+      .exec();
+    return {
+      total,
+      items: list,
+    };
   }
 
   async update(id: string, updateMaterialDto: UpdateMaterialDto) {
