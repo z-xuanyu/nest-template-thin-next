@@ -77,12 +77,12 @@ export class AuthController {
     return apiSucceed(data);
   }
 
-  @Get('getUserInfo')
+  @Get('admin/getUserInfo')
   @UseGuards(AuthGuard('admin-jwt'))
   @ApiBearerAuth()
   @ApiOperation({ summary: '获取管理端登录人信息' })
   async getUserInfo(@CurrentUser() user: AdminDocument) {
-    const id: string = String( user._id);
+    const id: string = String(user._id);
     const res = await this.adminService.findOne(id)
     return apiSucceed(res);
   }

@@ -7,4 +7,7 @@ export class QueryMaterialDto extends PaginationParametersDto {
 
   @ApiProperty({ title: '文件类型', required: false, enum: ['image', 'video'] })
   type: string;
+
+  @ApiProperty({ title: '分类id', required: false, default: null })
+  cid?: string | null;
 }

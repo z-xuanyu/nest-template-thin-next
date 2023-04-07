@@ -17,4 +17,8 @@ export class MaterialCategory {
   @ApiProperty({ title: '父级分类' })
   @prop({ ref: () => MaterialCategory, default: null })
   pid: Ref<MaterialCategory> | null;
+
+  @ApiProperty({ title: '分类类型' })
+  @prop({ type: String, default: 'image' })
+  type?: string;
 }
