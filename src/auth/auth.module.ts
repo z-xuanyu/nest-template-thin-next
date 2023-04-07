@@ -11,6 +11,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { MulterModule } from '@nestjs/platform-express';
+import { AdminService } from 'src/admin/admin.service';
 import { MaterialService } from 'src/material/material.service';
 import { UserService } from 'src/user/user.service';
 import { AdminJwtStrategy } from './admin.jwt.strategy';
@@ -37,6 +38,7 @@ import { WebLocalStrategy } from './web.local.strategy';
     WebJwtStrategy,
     UserService,
     MaterialService,
+    AdminService,
   ],
 })
 export class AuthModule {}

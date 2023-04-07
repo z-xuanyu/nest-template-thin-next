@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { MaterialService } from './material.service';
 import { CreateMaterialDto } from './dto/create-material.dto';
@@ -13,6 +14,7 @@ import { UpdateMaterialDto } from './dto/update-material.dto';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { apiSucceed } from '@app/common/ResponseResultModel';
 import { AuthGuard } from '@nestjs/passport';
+import { QueryMaterialDto } from './dto/query-material.dto';
 
 @ApiTags('管理端--素材中心')
 @UseGuards(AuthGuard('admin-jwt'))
@@ -23,8 +25,8 @@ export class MaterialController {
 
   @Get()
   @ApiOperation({ summary: '素材列表' })
-  async findAll() {
-    const res = await this.materialService.findAll();
+  async findAll(@Query() parameters: QueryMaterialDto) {
+    const res = await this.materialService.findAll(parameters);
     return apiSucceed(res);
   }
 

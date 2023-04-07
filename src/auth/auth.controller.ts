@@ -20,6 +20,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiOperation,
@@ -40,6 +41,10 @@ import { extname } from 'path';
 import { MaterialService } from 'src/material/material.service';
 import { CreateMaterialDto } from 'src/material/dto/create-material.dto';
 import { isValidObjectId } from 'mongoose';
+import { Get } from '@nestjs/common/decorators';
+import { AdminService } from 'src/admin/admin.service';
+import { CurrentUser } from './current-user.decorator';
+import { AdminDocument } from '@app/db/modules/admin.model';
 
 @ApiTags('登录')
 @Controller('auth')
@@ -49,6 +54,7 @@ export class AuthController {
     private jwtService: JwtService,
     private userService: UserService,
     private materialService: MaterialService,
+    private adminService: AdminService,
   ) {}
 
   @ApiOperation({ summary: '管理站--登录' })
@@ -70,6 +76,17 @@ export class AuthController {
     };
     return apiSucceed(data);
   }
+
+  @Get('getUserInfo')
+  @UseGuards(AuthGuard('admin-jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: '获取管理端登录人信息' })
+  async getUserInfo(@CurrentUser() user: AdminDocument) {
+    const id: string = String( user._id);
+    const res = await this.adminService.findOne(id)
+    return apiSucceed(res);
+  }
+  
 
   @ApiOperation({ summary: 'web站--会员登录' })
   @Post('web/login')
