@@ -8,6 +8,7 @@ import { Category } from '@app/db/modules/category.model';
 import { Article } from '@app/db/modules/article.model';
 import { MaterialCategory } from '@app/db/modules/material-category.model';
 import { Material } from '@app/db/modules/material.model';
+import { Report } from '@app/db/modules/report.model';
 
 @Global()
 @Module({
@@ -27,6 +28,7 @@ import { Material } from '@app/db/modules/material.model';
       User,
       MaterialCategory,
       Material,
+      Report,
     ]),
   ],
   providers: [CommonService],

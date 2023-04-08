@@ -45,7 +45,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^4.4.1",
     "rxjs": "^7.8.0",
-    "swagger-ui-express": "^4.6.2"
+    "swagger-ui-express": "^4.6.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.3.0",

@@ -18,9 +18,10 @@ import { CategoryModule } from './category/category.module';
 import { ArticleModule } from './article/article.module';
 import { MaterialCategoryModule } from './material-category/material-category.module';
 import { MaterialModule } from './material/material.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
-  imports: [CommonModule, AuthModule, AdminModule, UserModule, CategoryModule, ArticleModule, MaterialCategoryModule, MaterialModule],
+  imports: [CommonModule, AuthModule, AdminModule, UserModule, CategoryModule, ArticleModule, MaterialCategoryModule, MaterialModule, ReportModule],
   controllers: [AppController],
   providers: [AppService],
 })
