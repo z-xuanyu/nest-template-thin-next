@@ -17,7 +17,7 @@ import { index, ModelOptions, prop, } from '@typegoose/typegoose';
   },
 })
 
-@index({ title: 1 })
+@index({ title: 1, indexField: 1 })
 export class Report {
   @ApiProperty({ title: '标题' })
   @prop({ required: true })
@@ -53,4 +53,7 @@ export class Report {
 
   @prop()
   tablesFigure: string;
+
+  @prop({ type: String, default: 'title' })
+  indexField: string;
 }

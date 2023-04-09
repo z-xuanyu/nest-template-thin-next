@@ -17,14 +17,19 @@ export class ReportService {
 
   async findAll(parameters: QueryReportDto) {
     const query = {
-      title: { $regex: new RegExp(parameters.title, 'i') }
+      title: { $regex: new RegExp(parameters.title, 'i') },
+      indexField: "title",
     };
     const total = await this.reportModel.estimatedDocumentCount(query);
-    const result = await this.reportModel
-      .find(query)
-      .limit(~~parameters.pageSize)
-      .skip(~~((parameters.pageNumber - 1) * parameters.pageSize))
-      .exec();
+    const result = await Promise.race([
+      this.reportModel
+        .find(query)
+        .hint({ title: 1 })
+        .limit(~~parameters.pageSize)
+        .skip(~~((parameters.pageNumber - 1) * parameters.pageSize))
+        .exec(),
+      new Promise((resolve) => setTimeout(resolve, 2000, [])),
+    ]);
     return {
       total,
       items: result,
