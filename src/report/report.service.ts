@@ -19,7 +19,7 @@ export class ReportService {
     const query = {
       title: { $regex: new RegExp(parameters.title, 'i') },
     };
-    const total = await this.reportModel.countDocuments(query);
+    const total = await this.reportModel.estimatedDocumentCount();
     const result = await this.reportModel
       .find(query)
       .sort({ updatedAt: -1 })
