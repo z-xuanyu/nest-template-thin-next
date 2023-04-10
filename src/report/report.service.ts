@@ -12,24 +12,20 @@ export class ReportService {
     private reportModel: ReturnModelType<typeof Report>,
   ) {}
   async create(createReportDto: CreateReportDto) {
-    return await this.reportModel.create(createReportDto); 
+    return await this.reportModel.create(createReportDto);
   }
 
   async findAll(parameters: QueryReportDto) {
     const query = {
       title: { $regex: new RegExp(parameters.title, 'i') },
-      indexField: "title",
     };
-    const total = await this.reportModel.estimatedDocumentCount(query);
-    const result = await Promise.race([
-      this.reportModel
-        .find(query)
-        .hint({ title: 1 })
-        .limit(~~parameters.pageSize)
-        .skip(~~((parameters.pageNumber - 1) * parameters.pageSize))
-        .exec(),
-      new Promise((resolve) => setTimeout(resolve, 2000, [])),
-    ]);
+    const total = await this.reportModel.countDocuments(query);
+    const result = await this.reportModel
+      .find(query)
+      .sort({ updatedAt: -1 })
+      .limit(~~parameters.pageSize)
+      .skip(~~((parameters.pageNumber - 1) * parameters.pageSize))
+      .exec();
     return {
       total,
       items: result,
@@ -37,11 +33,11 @@ export class ReportService {
   }
 
   async findOne(id: string) {
-    return await this.reportModel.findById(id)
+    return await this.reportModel.findById(id);
   }
 
   async update(id: string, updateReportDto: UpdateReportDto) {
-    return await this.reportModel.findByIdAndUpdate(id, updateReportDto)
+    return await this.reportModel.findByIdAndUpdate(id, updateReportDto);
   }
 
   async remove(id: string) {

@@ -39,8 +39,8 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 
 @ApiTags('管理端--管理员')
 @Controller('admin')
-@UseGuards(AuthGuard('admin-jwt'))
-@ApiBearerAuth()
+// @UseGuards(AuthGuard('admin-jwt'))
+// @ApiBearerAuth()
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 

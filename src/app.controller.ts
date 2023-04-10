@@ -7,7 +7,13 @@
  * @LastEditTime: 2021-12-24 15:50:30
  * @Description: Modify here please
  */
-import { Controller, Get, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
@@ -21,9 +27,9 @@ import { apiSucceed } from '@app/common/ResponseResultModel';
 @Controller()
 export class AppController {
   constructor(
-     private readonly appService: AppService,
-     private readonly reportService: ReportService
-     ) {}
+    private readonly appService: AppService,
+    private readonly reportService: ReportService,
+  ) {}
 
   @Get()
   getHello(): string {
@@ -43,16 +49,12 @@ export class AppController {
     const worksheet = workbook.Sheets[sheetName];
     const data: Array<CreateReportDto> = XLSX.utils.sheet_to_json(worksheet);
     try {
-      for (let index = 0; index < 300; index++) {
-        for (const item of data) {
-          item.title = `${item.title}-${Date.now()}`
-          await this.reportService.create(item)
-        }
+      for (const item of data) {
+        await this.reportService.create(item);
       }
-      
     } catch (error) {
-      new Error('导入数据失败')
+      throw new Error(error);
     }
-    return apiSucceed('数据导入成功')
+    return apiSucceed('数据导入成功');
   }
 }

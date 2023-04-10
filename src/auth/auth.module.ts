@@ -24,7 +24,7 @@ import { WebLocalStrategy } from './web.local.strategy';
     PassportModule,
     JwtModule.register({
       secret: 'xuanyu',
-      signOptions: { expiresIn: '7200s' },
+      signOptions: { expiresIn: '720000s' },
     }),
     MulterModule.register({
       dest: './public/uploads',
