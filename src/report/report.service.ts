@@ -12,6 +12,7 @@ export class ReportService {
     private reportModel: ReturnModelType<typeof Report>,
   ) {}
   async create(createReportDto: CreateReportDto) {
+    createReportDto.timeStamp = Date.now();
     return await this.reportModel.create(createReportDto);
   }
 
@@ -22,7 +23,7 @@ export class ReportService {
     const total = await this.reportModel.estimatedDocumentCount();
     const result = await this.reportModel
       .find(query)
-      .sort({ updatedAt: -1 })
+      .sort({ timeStamp: -1 })
       .limit(~~parameters.pageSize)
       .skip(~~((parameters.pageNumber - 1) * parameters.pageSize))
       .exec();

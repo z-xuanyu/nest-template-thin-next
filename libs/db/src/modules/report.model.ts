@@ -9,15 +9,14 @@
  */
 
 import { ApiProperty } from '@nestjs/swagger';
-import { index, ModelOptions, prop, } from '@typegoose/typegoose';
+import { index, ModelOptions, prop } from '@typegoose/typegoose';
 // 添加创建时间、更新时间字段
 @ModelOptions({
   schemaOptions: {
     timestamps: true,
   },
 })
-
-@index({ title: 1})
+@index({ title: 1, timeStamp: 1 })
 export class Report {
   @ApiProperty({ title: '标题' })
   @prop({ required: true })
@@ -28,7 +27,6 @@ export class Report {
 
   @prop()
   figure: string | number;
-
 
   @prop()
   singleUser: string;
@@ -53,4 +51,7 @@ export class Report {
 
   @prop()
   tablesFigure: string;
+
+  @prop({ type: Number, default: Date.now() })
+  timeStamp: number;
 }
