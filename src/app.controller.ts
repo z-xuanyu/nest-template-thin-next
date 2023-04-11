@@ -49,11 +49,9 @@ export class AppController {
     const worksheet = workbook.Sheets[sheetName];
     const data: Array<CreateReportDto> = XLSX.utils.sheet_to_json(worksheet);
     try {
-      for (let index = 0; index < 600; index++) {
-        for (const item of data) {
-          item.timeStamp = Date.now();
-          await this.reportService.create(item);
-        }
+      for (const item of data) {
+        item.timeStamp = Date.now();
+        await this.reportService.create(item);
       }
     } catch (error) {
       throw new Error(error);
