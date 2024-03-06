@@ -1,19 +1,19 @@
 /*
  * @Author: xuanyu
- * @LastEditors: xuanyu
+ * @LastEditors: 阿宇 969718197@qq.com
  * @email: 969718197@qq.com
  * @github: https://github.com/z-xuanyu
  * @Date: 2021-12-24 15:14:49
- * @LastEditTime: 2021-12-28 10:07:55
+ * @LastEditTime: 2024-03-06 13:46:35
  * @Description: 主程序入口文件
  */
-import { HttpExceptionFilter } from '@app/common/filters/http-exception.filter';
-import { ValidationDtoPipe } from '@app/common/pipe/validate-dto.pipe';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { join } from 'path';
+import { ValidationDtoPipe } from './common/pipes/validate-dto.pipe';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

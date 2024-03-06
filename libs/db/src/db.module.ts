@@ -1,10 +1,10 @@
 /*
  * @Author: xuanyu
- * @LastEditors: xuanyu
+ * @LastEditors: 阿宇 969718197@qq.com
  * @email: 969718197@qq.com
  * @github: https://github.com/z-xuanyu
  * @Date: 2021-12-24 15:53:53
- * @LastEditTime: 2021-12-27 16:17:37
+ * @LastEditTime: 2024-03-06 10:53:52
  * @Description: 数据库模块
  */
 import { DynamicModule, Module, Provider } from '@nestjs/common';
